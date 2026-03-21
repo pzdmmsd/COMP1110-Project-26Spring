@@ -153,7 +153,48 @@ The timeline for the project and the dependency of tasks is illustrated by the G
 
 \begin{landscape}
 \begin{figure}
-    Placeholder.
+    \begin{ganttchart}
+        [
+            time slot format=little-endian,
+            expand chart=24cm,
+            title height=1,
+            y unit title=0.6cm,
+            y unit chart=0.8cm,
+            hgrid=true,
+            vgrid=true,
+            bar height=0.8,
+            bar top shift=0.1,
+        ]
+        {24-03-2026}{30-04-2026}
+        % Title
+        \gantttitle{\bfseries Project Timeline}{38} \\
+        \gantttitlecalendar{month=shortname, day}
+        \ganttnewline
+        % Tasks
+        % Task Phase R
+        \ganttbar[name=tr01]{\texttt{R01} -- Survey}{24-03-2026}{26-03-2026} \\
+        \ganttbar[name=tr02]{\texttt{R02} -- Design}{24-03-2026}{26-03-2026} \\
+        % Task Phase I
+        \ganttlinkedbar[name=ti01]{\texttt{I01} -- Data collection}{28-03-2026}{03-04-2026} \\
+        \ganttlink{tr01}{ti01}
+        \ganttbar[name=ti02]{\texttt{I02} -- Write data classes}{28-03-2026}{30-03-2026} \\
+        \ganttlink{tr02}{ti02}
+        \ganttlinkedbar[name=ti03a]{\texttt{I03A} -- Write data management UI}{01-04-2026}{05-04-2026} \\
+        \ganttbar[name=ti03]{\texttt{I03} -- Write text UI}{01-04-2026}{10-04-2026} \\
+        \ganttlink{ti02}{ti03}
+        \ganttbar[name=ti04]{\texttt{I04} -- Write route search logic}{04-04-2026}{08-04-2026} \\
+        \ganttlink{ti01}{ti04}
+        \ganttlinkedbar[name=ti05]{\texttt{I05} -- Write advanced preference mode}{09-04-2026}{11-04-2026} \\
+        % Task Phase C
+        \ganttlinkedbar[name=tc01]{\texttt{C01} -- Scenario design}{13-04-2026}{14-04-2026} \\
+        \ganttlink{ti03}{tc01}
+        \ganttlink{ti04}{tc01}
+        \ganttlinkedbar[name=tc02]{\texttt{C02} -- Run scenarios and record results}{15-04-2026}{15-04-2026} \\
+        \ganttlinkedbar[name=tc03]{\texttt{C03} -- Analyze solution capabilities}{16-04-2026}{17-04-2026} \\
+        \ganttlinkedbar[name=tc04]{\texttt{C04} -- Discussion and suggestions}{18-04-2026}{19-04-2026} \\
+        % Buffer bar
+        \ganttbar[name=buffer]{\textit{Buffer}}{20-04-2026}{30-04-2026}
+    \end{ganttchart}
     \caption{The Gantt chart illustrating the project execution.}\label{fig:project-gantt-chart}
 \end{figure}
 \end{landscape}
