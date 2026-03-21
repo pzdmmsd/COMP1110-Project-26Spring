@@ -59,27 +59,65 @@ The conclusions drawn from the comparison shall be used to fine-tune the design 
 
 \section{Task Decomposition, Assignments \& Timeline}
 
-The project will be decomposed into three phases: \textbf{Research \& Design}, \textbf{Implementation}, and \textbf{Test \& Evaluation}, each with its dedicated tasks.
+The project will be decomposed into three phases: \textbf{Research \& Design}, \textbf{Implementation}, and \textbf{Case Study, Test, \& Evaluation}, each with its dedicated tasks.
 Each task has a defined timeline and expected deliverables, which will be detailed in the following subsections.
 
 \subsection{Task decomposition}
 The tasks, along with their descriptions, expected deliverables, and time estimates, are listed in Table~\ref{tab:tasks}.
 
 \begin{landscape}
-\begin{longtable}{ll m{8cm} m{8cm} m{1cm}}
+\begin{longtable}{c >{\raggedright\arraybackslash}m{4cm} >{\raggedright\arraybackslash}m{8cm} >{\raggedright\arraybackslash}m{8cm} >{\centering\arraybackslash}m{1.2cm}}
+    % --- Head (first page only) ---
     \caption{A list of tasks for accomplishing the project, along with their descriptions, expected deliverables, and time estimations.}
     \label{tab:tasks}\\
     \toprule
     \textbf{Task ID} & \textbf{Phase} & \textbf{Description} & \textbf{Expected Deliverables} & \textbf{Time (days)} \\
-    \midrule \endhead
+    \midrule
+    \endfirsthead
+    % --- End of Head (first page) ---
 
+    % --- Head (subsequent pages) ---
+    \multicolumn{5}{c}{Table\ \thetable. \textit{Continued from last page.}} \\[1em]
+    \toprule
+    \textbf{Task ID} & \textbf{Phase} & \textbf{Description} & \textbf{Expected Deliverables} & \textbf{Time (days)} \\
+    \midrule
+    \endhead
+    % --- End of Head (subsequent pages) ---
+
+    % --- Foot (all pages except the last one) ---
+    \multicolumn{5}{r}{\textit{Continued on next page.}} \\
+    \endfoot
+    % --- End of Foot (all pages except the last one) ---
+
+    % --- Foot (last page) ---
+    \bottomrule
+    \endlastfoot
+    % --- End of Foot (last page) ---
+
+    % --- Body (all pages) ---
     \texttt{R01}\label{task:r01} & Research \& Design & Survey existing navigation solutions and compare them in a table format. & Comparison table of existing tools (target users, key features, missing features, etc.) with summary takeaways. & 3 \\
     \midrule[0.2pt]
     \texttt{R02}\label{task:r02} & Research \& Design & Problem modeling for our solution: define core entities, input/output, and coverage scope. & Documentation of core concepts (stop, segment, journey, etc.), input/output specifications, scope of coverage. & 1 \\
     \midrule[0.2pt]
     \texttt{I01}\label{task:i01} & Implementation & Data collection: assign responsible areas to each team member, measure and record paths between designated nodes. & Collected path data (distance, time, cost, etc.), raw measurement records or data sheets. & 7 \\
-
-    \bottomrule \endlastfoot
+    \midrule[0.2pt]
+    \texttt{I02}\label{task:i02} & Implementation & Coding: basic data structures in Python. & Implemented data structure classes (e.g., Graph, Node, Edge) with methods for serialization, deserialization, and basic operations. & 3 \\
+    \midrule[0.2pt]
+    \texttt{I03}\label{task:i03} & Implementation & Coding: text-based application UI with main functionality for selecting origin/destination and preferences. & A text-based user interface (based on \texttt{Textual}) for user to choose origin/destination and preferences, with backend integration for route planning. & 10 \\
+    \midrule[0.2pt]
+    \texttt{I03A}\label{task:i03a} & Implementation & Coding: data management UI for interactive data collection and editing. & (Optional) Interactive data management tool supporting CRUD operations on data. & 5 \\
+    \midrule[0.2pt]
+    \texttt{I04}\label{task:i04} & Implementation & Coding: route search logic (candidate generation, scoring, ranking). & Route search algorithm code, find the optimal itinerary based on the user's selected preferences (such as cost, duration, number of segments). & 5 \\
+    \midrule[0.2pt]
+    \texttt{I05}\label{task:i05} & Implementation & Coding: advanced preference mode. & An algorithm that can avoid stairs, or pick routes that are accessibility-focused, etc. & 3 \\
+    \midrule[0.2pt]
+    \texttt{C01}\label{task:c01} & Case Study, Test, \& Evaluation & Scenario design: write 3 to 4 user scenarios with goals, network layout, origin/destination, and preference modes. & Document describing 3 to 4 user scenarios. & 2 \\
+    \midrule[0.2pt]
+    \texttt{C02}\label{task:c02} & Case Study, Test, \& Evaluation & Record input/output for scenarios. Run the program for each scenario and capture results. & Input parameters and program outputs for each scenario. & 1 \\
+    \midrule[0.2pt]
+    \texttt{C03}\label{task:c03} & Case Study, Test, \& Evaluation & Analyze the competence of our solution and compare with existing solutions. & Analysis report on solution capabilities, comparison with existing tools. & 2 \\
+    \midrule[0.2pt]
+    \texttt{C04}\label{task:c04} & Case Study, Test, \& Evaluation & Discussion and suggestions: summarize strengths, limitations, and future improvements. & Discussion document with limitations analysis and improvement directions. & 2 \\
 \end{longtable}
 \end{landscape}
 
@@ -94,6 +132,16 @@ The task assignments is listed in Table~\ref{tab:task-assignments}.
         \midrule
         \hyperref[task:r01]{\texttt{R01}} & \cBanh, \sLiu, \jShing, \yYe, and \yZhang \\
         \hyperref[task:r02]{\texttt{R02}} & \dots \\
+        \hyperref[task:i01]{\texttt{I01}} & \dots \\
+        \hyperref[task:i02]{\texttt{I02}} & \dots \\
+        \hyperref[task:i03]{\texttt{I03}} & \dots \\
+        \hyperref[task:i03a]{\texttt{I03A}} & \dots \\
+        \hyperref[task:i04]{\texttt{I04}} & \dots \\
+        \hyperref[task:i05]{\texttt{I05}} & \dots \\
+        \hyperref[task:c01]{\texttt{C01}} & \dots \\
+        \hyperref[task:c02]{\texttt{C02}} & \dots \\
+        \hyperref[task:c03]{\texttt{C03}} & \dots \\
+        \hyperref[task:c04]{\texttt{C04}} & \dots \\
         \bottomrule
     \end{tabular}
 \end{table}
