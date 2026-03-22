@@ -57,7 +57,7 @@ jobs:
               echo "Unknown target: ${{ matrix.targets }}"
               exit 1
               ;;
-          fi
+          esac
 
       - name: Build LaTeX documents
         run: ${{ env.ENV_BUILD_CMD }} ${{ env.ENV_BUILD_ARGS }} ${{ env.ENV_BUILD_FILE }}
