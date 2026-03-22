@@ -12,10 +12,16 @@ jobs:
     if: contains(github.event.head_commit.message, '@build_doc') || github.event_name == 'workflow_dispatch'
     strategy:
       matrix:
-        targets: [project_plan]
+        target:
+          - name: project_plan
+            build_cmd: latexmk
+            build_args: -pdf -interaction=nonstopmode -synctex=1 -f
+            build_workdir: ./project_plan
+            build_file: COMP1110-D08-Project-Plan.tex
+            out_file: COMP1110-D08-Project-Plan.pdf
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Configure MiKTeX repository key for APT
         run: |
@@ -43,29 +49,13 @@ jobs:
           miktex packages install iftex || true
           miktex packages install kvoptions || true
 
-      - name: Configure build command based on "target"
-        run: |
-          case "${{ matrix.targets }}" in
-            "project_plan")
-              echo "ENV_BUILD_CMD=latexmk" >> "$GITHUB_ENV"
-              echo "ENV_BUILD_ARGS=-pdf -interaction=nonstopmode -synctex=1 -f" >> "$GITHUB_ENV"
-              echo "ENV_BUILD_WORKDIR=./project_plan" >> "$GITHUB_ENV"
-              echo "ENV_BUILD_FILE=COMP1110-D08-Project-Plan.tex" >> "$GITHUB_ENV"
-              echo "ENV_OUT_FILE=COMP1110-D08-Project-Plan.pdf" >> "$GITHUB_ENV"
-              ;;
-            *)
-              echo "Unknown target: ${{ matrix.targets }}"
-              exit 1
-              ;;
-          esac
-
       - name: Build LaTeX documents
-        run: ${{ env.ENV_BUILD_CMD }} ${{ env.ENV_BUILD_ARGS }} ${{ env.ENV_BUILD_FILE }}
-        working-directory: ${{ env.ENV_BUILD_WORKDIR }}
+        run: ${{ matrix.target.build_cmd }} ${{ matrix.target.build_args }} ${{ matrix.target.build_file }}
+        working-directory: ${{ matrix.target.build_workdir }}
 
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.targets }}-pdf
-          path: ${{ env.ENV_BUILD_WORKDIR }}/${{ env.ENV_OUT_FILE }}
+          name: ${{ matrix.target.name }}-pdf
+          path: ${{ matrix.target.build_workdir }}/${{ matrix.target.out_file }}
           retention-days: 7
