@@ -1,0 +1,25 @@
+name: Build Project Plan PDF
+
+on:
+  push:
+    branches: [ patch-1 ]
+  workflow_dispatch:
+
+jobs:
+  build_latex:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Compile LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: project_plan/COMP1110-D08-Project-Plan.tex
+          # compiler: xelatex
+
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Project-Plan-PDF
+          path: project_plan/COMP1110-D08-Project-Plan.pdf
