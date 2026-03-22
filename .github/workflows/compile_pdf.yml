@@ -17,8 +17,8 @@ jobs:
         with:
           working_directory: project_plan
           root_file: COMP1110-D08-Project-Plan.tex
-          # compiler: xelatex
-          args: "-pdf -xe -f"
+          compiler: xelatex
+          args: "-pdf -f"
 
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
