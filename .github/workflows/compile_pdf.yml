@@ -1,29 +1,71 @@
-name: Build Project Plan PDF
+name: Build LaTeX Documents
 
 on:
-#  push:
-#    branches: [ master, patch-1 ]
+  push:
+    branches:
+      - master
   workflow_dispatch:
-#  schedule:
-#    - cron: '0 2 * * *'
 
 jobs:
-  build_latex:
-    runs-on: ubuntu-latest
+  build_pdf:
+    runs-on: ubuntu-24.04 # Noble
+    if: contains(github.event.head_commit.message, '@build_doc') || github.event_name == 'workflow_dispatch'
+    strategy:
+      matrix:
+        targets: [project_plan]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Compile LaTeX document
-        uses: xu-cheng/latex-action@v3
+      - name: Configure MiKTeX repository key for APT
+        run: |
+          curl -fsSL https://miktex.org/download/key | gpg --dearmor | sudo tee /usr/share/keyrings/miktex-keyring.gpg > /dev/null
+          echo "deb [signed-by=/usr/share/keyrings/miktex-keyring.gpg] https://miktex.org/download/ubuntu noble universe" | sudo tee /etc/apt/sources.list.d/miktex.list
+          sudo apt-get update
+
+      - name: Install MiKTeX
+        uses: awalsh128/cache-apt-pkgs-action@v1
         with:
-          working_directory: project_plan
-          root_file: COMP1110-D08-Project-Plan.tex
-          compiler: xelatex
-          args: "-pdf -f"
+          packages: miktex
+
+      - name: Configure MiKTeX
+        run: |
+          miktexsetup finish
+          initexmf --set-config-value [MPM]AutoInstall=1
+          initexmf --enable-installer
+          initexmf --update-fndb
+          initexmf --mkmaps
+          miktex packages update
+          echo "PATH=$HOME/bin:$PATH" >> "$GITHUB_ENV"
+          # temporary fix: some MiKTeX packages are not auto-installed, manually install:
+          miktex packages install xkeyval || true
+          miktex packages install kvsetkeys || true
+          miktex packages install iftex || true
+          miktex packages install kvoptions || true
+
+      - name: Configure build command based on "target"
+        run: |
+          case "${{ matrix.targets }}" in
+            "project_plan")
+              echo "ENV_BUILD_CMD=latexmk" >> "$GITHUB_ENV"
+              echo "ENV_BUILD_ARGS=-pdf -interaction=nonstopmode -synctex=1 -f" >> "$GITHUB_ENV"
+              echo "ENV_BUILD_WORKDIR=./project_plan" >> "$GITHUB_ENV"
+              echo "ENV_BUILD_FILE=COMP1110-D08-Project-Plan.tex" >> "$GITHUB_ENV"
+              echo "ENV_OUT_FILE=COMP1110-D08-Project-Plan.pdf" >> "$GITHUB_ENV"
+              ;;
+            *)
+              echo "Unknown target: ${{ matrix.targets }}"
+              exit 1
+              ;;
+          fi
+
+      - name: Build LaTeX documents
+        run: ${{ env.ENV_BUILD_CMD }} ${{ env.ENV_BUILD_ARGS }} ${{ env.ENV_BUILD_FILE }}
+        working-directory: ${{ env.ENV_BUILD_WORKDIR }}
 
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Project-Plan-PDF
-          path: project_plan/COMP1110-D08-Project-Plan.pdf
+          name: ${{ matrix.targets }}-pdf
+          path: ${{ env.ENV_BUILD_WORKDIR }}/${{ env.ENV_OUT_FILE }}
+          retention-days: 7
