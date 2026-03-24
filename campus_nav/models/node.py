@@ -1,6 +1,9 @@
-from typing import List
+from __future__ import annotations
 
-from .edge import Edge
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .edge import Edge
 
 class Node:
     """
@@ -23,9 +26,9 @@ class Node:
         """
 
         # private, modifications should be done through add_edge() and remove_edge()
-        self._edges: List[Edge] = []
+        self._edges: list[Edge] = []
 
-    def get_edges(self) -> List[Edge]:
+    def get_edges(self) -> list[Edge]:
         """
         Returns a copy of the list of edges that are incident to this node.
         :return: A copy of the list of edges that are incident to this node.

@@ -1,4 +1,4 @@
-from typing import Dict, List
+from __future__ import annotations
 
 from .edge import Edge
 from .edge_type import EdgeType
@@ -14,10 +14,10 @@ class CampusMap:
         Constructor. Creates a new CampusMap instance.
         """
 
-        self._nodes: Dict[str, Node] = {}
-        self._edges: List[Edge] = []
+        self._nodes: dict[str, Node] = {}
+        self._edges: list[Edge] = []
 
-    def get_nodes(self) -> List[Node]:
+    def get_nodes(self) -> list[Node]:
         """
         Returns a copy of the list of nodes in the campus map.
         :return: A copy of the list of nodes in the campus map.
@@ -35,7 +35,7 @@ class CampusMap:
             raise ValueError(f"No node with ID {node_id} exists in the campus map.")
         return self._nodes[node_id]
 
-    def get_edges(self) -> List[Edge]:
+    def get_edges(self) -> list[Edge]:
         """
         Returns a copy of the list of edges in the campus map.
         :return: A copy of the list of edges in the campus map.

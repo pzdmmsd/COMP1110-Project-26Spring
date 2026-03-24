@@ -1,5 +1,11 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from .edge_type import EdgeType
-from .node import Node
+
+if TYPE_CHECKING:
+    from .node import Node
 
 class Edge:
     """
