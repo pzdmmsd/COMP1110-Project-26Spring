@@ -13,7 +13,6 @@ on:
       - "pyproject.toml"
       - "requirements-dev.txt"
       - ".github/workflows/python_import_checks.yml"
-  workflow_dispatch:
 
 jobs:
   import_checks:
