@@ -87,3 +87,6 @@ __pycache__/
 # IDEs and editors
 .vscode/
 .idea/
+
+# Temp build artefacts
+.tmp_assets*/

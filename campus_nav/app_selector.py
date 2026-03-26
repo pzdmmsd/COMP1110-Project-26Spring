@@ -6,7 +6,7 @@ from textual.widgets import Button, Footer, Header, Label, RadioButton, RadioSet
 class AppSelector(App[int]):
     """
     The entry point for the campus_nav application.
-    This app allows users to select whether to launch the navigation app or the data manager app.
+    This app allows users to select whether to launch the navigation app or the data visualiser app.
     On exit, it will return an integer indicating what is the next step.
     """
 
@@ -37,7 +37,7 @@ class AppSelector(App[int]):
             yield Rule(line_style="heavy")
             with RadioSet(id="options_set"):
                 yield RadioButton("Launch Navigator App", id="rtn_nav_app")
-                yield RadioButton("Launch Data Manager App", id="rtn_data_manager_app")
+                yield RadioButton("Launch Data Visualiser App", id="rtn_data_manager_app")
                 yield RadioButton("Exit", id="rtn_exit")
             yield Label("ACTION_DESC_PLACEHOLDER", id="lbl_action_desc")
             yield Rule(line_style="heavy")
@@ -46,7 +46,7 @@ class AppSelector(App[int]):
         def on_radio_set_changed(self, event: RadioSet.Changed) -> None:
             radio_btns_mapping : dict[str, tuple[int, str]] = {
                 "rtn_nav_app":          (0, "Launch the navigation app to find your way around campus!"),
-                "rtn_data_manager_app": (1, "Launch the data manager app to manage the campus CSV data."),
+                "rtn_data_manager_app": (1, "Launch the data visualiser app to explore the campus map graphically."),
                 "rtn_exit":             (-1, "Exit the application."),
             }
             self._exit_code = radio_btns_mapping[event.pressed.id][0]

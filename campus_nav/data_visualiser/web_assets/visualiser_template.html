@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Campus Map Visualiser</title>
+    <style>
+      html, body, #sigma-container {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: radial-gradient(circle at top, #f7fbff 0%, #e9f0ff 45%, #dce6f8 100%);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      .panel {
+        position: absolute;
+        z-index: 10;
+        background: rgba(255, 255, 255, 0.90);
+        border: 1px solid #d2dcf0;
+        border-radius: 10px;
+        padding: 8px 10px;
+        color: #23314d;
+        font-size: 12px;
+        line-height: 1.4;
+        box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+      }
+      #legend {
+        top: 12px;
+        left: 12px;
+      }
+      .legend-swatch {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 4px;
+        vertical-align: middle;
+      }
+      .legend-row { margin: 1px 0; }
+      .legend-section { font-weight: 700; margin-top: 6px; margin-bottom: 2px; }
+      .legend-kbd { font-size: 10px; color: #667; background: #eef1f6; border-radius: 3px; padding: 0 4px; border: 1px solid #ccd; margin-left: 4px; }
+      .btn-row { margin-top: 4px; display: flex; gap: 4px; flex-wrap: wrap; }
+      .btn-sm {
+        font-size: 11px; padding: 2px 8px; border-radius: 5px;
+        border: 1px solid #bcc8e0; background: #f5f7fc; color: #334; cursor: pointer;
+      }
+      .btn-sm:hover { background: #e4eafc; }
+      #search-input {
+        width: 100%; box-sizing: border-box; margin-top: 4px; padding: 3px 6px;
+        font-size: 11px; border: 1px solid #bcc8e0; border-radius: 5px; outline: none;
+      }
+      #search-input:focus { border-color: #6b8cfa; }
+      #details {
+        top: 12px;
+        right: 12px;
+        width: 340px;
+        max-height: calc(100vh - 24px);
+        overflow-y: auto;
+      }
+      #details-title { font-weight: 700; margin-bottom: 6px; font-size: 13px; }
+      #details-body { }
+      .detail-field { margin: 2px 0; }
+      .detail-label { font-weight: 600; color: #445; }
+      .edge-table { width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 11px; }
+      .edge-table th { text-align: left; border-bottom: 1px solid #d2dcf0; padding: 3px 4px; font-weight: 600; color: #445; }
+      .edge-table td { border-bottom: 1px solid #eef1f6; padding: 3px 4px; }
+      .edge-badge {
+        display: inline-block; padding: 1px 6px; border-radius: 8px;
+        color: #fff; font-size: 10px; font-weight: 600;
+      }
+      #error {
+        position: absolute;
+        bottom: 12px;
+        left: 12px;
+        z-index: 10;
+        background: rgba(255, 240, 240, 0.95);
+        border: 1px solid #d99;
+        border-radius: 10px;
+        padding: 8px 10px;
+        color: #7a1c1c;
+        font-size: 12px;
+        display: none;
+        max-width: 520px;
+        white-space: pre-wrap;
+      }
+    </style>
+    <script src="sigma-bundle.min.js"></script>
+  </head>
+  <body>
+    <div id="legend" class="panel">
+      <div class="legend-section" style="margin-top:0;">Controls</div>
+      <div class="legend-row">Drag background: pan</div>
+      <div class="legend-row">Scroll: zoom</div>
+      <div class="legend-row">Drag node: relocate</div>
+      <div class="legend-section">Shortcuts</div>
+      <div class="legend-row"><span class="legend-kbd">F</span> Zoom to fit</div>
+      <div class="legend-row"><span class="legend-kbd">L</span> Toggle edge labels</div>
+      <div class="legend-row"><span class="legend-kbd">Esc</span> Deselect node</div>
+      <div class="legend-section">Edge Types</div>
+      <div id="legend-edge-types"></div>
+      <div class="btn-row">
+        <button class="btn-sm" id="btn-fit" title="Zoom to fit (F)">Fit</button>
+        <button class="btn-sm" id="btn-labels" title="Toggle edge labels (L)">Labels</button>
+        <button class="btn-sm" id="btn-export" title="Export as PNG">Export PNG</button>
+      </div>
+      <input type="text" id="search-input" placeholder="Search nodes..." />
+    </div>
+    <div id="details" class="panel">
+      <div id="details-title">Campus Map</div>
+      <div id="details-body"></div>
+    </div>
+    <div id="error"></div>
+    <div id="sigma-container"></div>
+    <script>
+      var payload = __GRAPH_PAYLOAD_JSON__;
+      var config = __CONFIG_JSON__;
+      var errorBox = document.getElementById("error");
+      var detailsTitle = document.getElementById("details-title");
+      var detailsBody = document.getElementById("details-body");
+      var searchInput = document.getElementById("search-input");
+      var GraphCtor = window.graphology && window.graphology.Graph;
+      var SigmaCtor = window.Sigma;
+      var CurveProgram = window.EdgeCurveProgram;
+
+      var EDGE_COLORS = config.edge_type_colors || {};
+
+      // Build legend edge-type rows from config
+      (function() {
+        var container = document.getElementById("legend-edge-types");
+        var types = Object.keys(EDGE_COLORS);
+        for (var i = 0; i < types.length; i++) {
+          var row = document.createElement("div");
+          row.className = "legend-row";
+          row.innerHTML = '<span class="legend-swatch" style="background:' + EDGE_COLORS[types[i]] + ';"></span>' + types[i];
+          container.appendChild(row);
+        }
+      })();
+
+      function showError(message) {
+        errorBox.style.display = "block";
+        errorBox.textContent = message;
+      }
+
+      function showWelcome() {
+        detailsTitle.textContent = "Campus Map";
+        detailsBody.innerHTML =
+          '<div class="detail-field"><span class="detail-label">Nodes:</span> ' + payload.nodes.length + '</div>' +
+          '<div class="detail-field"><span class="detail-label">Edges:</span> ' + payload.edges.length + '</div>' +
+          '<div class="detail-field" style="margin-top:8px;color:#667;">Click a node to inspect its connections.<br>Hover over nodes to highlight neighbors.</div>';
+      }
+
+      /* ── Connected components via BFS ────────────────────────── */
+      function findComponents(graph) {
+        var visited = {};
+        var components = [];
+        graph.forEachNode(function(n) {
+          if (visited[n]) return;
+          var comp = [];
+          var queue = [n];
+          visited[n] = true;
+          while (queue.length > 0) {
+            var cur = queue.shift();
+            comp.push(cur);
+            graph.forEachNeighbor(cur, function(nb) {
+              if (!visited[nb]) { visited[nb] = true; queue.push(nb); }
+            });
+          }
+          components.push(comp);
+        });
+        // Largest component first
+        components.sort(function(a, b) { return b.length - a.length; });
+        return components;
+      }
+
+      /* ── Fruchterman-Reingold on a subset of nodes ──────────────── */
+      function frLayout(graph, nodeIds, iterations) {
+        if (nodeIds.length <= 1) return;
+        var area = nodeIds.length * 400;
+        var k = Math.sqrt(area / nodeIds.length);
+        var temp = k * 1.5;
+        var cooling = temp / (iterations + 1);
+        var nodeSet = {};
+        for (var i = 0; i < nodeIds.length; i++) nodeSet[nodeIds[i]] = true;
+
+        for (var iter = 0; iter < iterations; iter++) {
+          var disp = {};
+          for (var a = 0; a < nodeIds.length; a++) disp[nodeIds[a]] = {x: 0, y: 0};
+
+          // Repulsive forces
+          for (var i = 0; i < nodeIds.length; i++) {
+            for (var j = i + 1; j < nodeIds.length; j++) {
+              var uId = nodeIds[i], vId = nodeIds[j];
+              var ux = graph.getNodeAttribute(uId, "x"), uy = graph.getNodeAttribute(uId, "y");
+              var vx = graph.getNodeAttribute(vId, "x"), vy = graph.getNodeAttribute(vId, "y");
+              var dx = ux - vx, dy = uy - vy;
+              var dist = Math.sqrt(dx * dx + dy * dy) || 0.01;
+              var repForce = (k * k) / dist;
+              var fx = (dx / dist) * repForce, fy = (dy / dist) * repForce;
+              disp[uId].x += fx; disp[uId].y += fy;
+              disp[vId].x -= fx; disp[vId].y -= fy;
+            }
+          }
+
+          // Attractive forces (only edges within this component)
+          graph.forEachEdge(function(edgeId, attrs, src, tgt) {
+            if (!nodeSet[src] || !nodeSet[tgt]) return;
+            var sx = graph.getNodeAttribute(src, "x"), sy = graph.getNodeAttribute(src, "y");
+            var tx = graph.getNodeAttribute(tgt, "x"), ty = graph.getNodeAttribute(tgt, "y");
+            var dx = sx - tx, dy = sy - ty;
+            var dist = Math.sqrt(dx * dx + dy * dy) || 0.01;
+            var attForce = (dist * dist) / k;
+            var fx = (dx / dist) * attForce, fy = (dy / dist) * attForce;
+            disp[src].x -= fx; disp[src].y -= fy;
+            disp[tgt].x += fx; disp[tgt].y += fy;
+          });
+
+          for (var n = 0; n < nodeIds.length; n++) {
+            var id = nodeIds[n], d = disp[id];
+            var len = Math.sqrt(d.x * d.x + d.y * d.y) || 0.01;
+            var capped = Math.min(len, temp);
+            graph.setNodeAttribute(id, "x", graph.getNodeAttribute(id, "x") + (d.x / len) * capped);
+            graph.setNodeAttribute(id, "y", graph.getNodeAttribute(id, "y") + (d.y / len) * capped);
+          }
+          temp -= cooling;
+        }
+      }
+
+      /* ── Component-aware layout ─────────────────────────────────── */
+      function layoutGraph(graph) {
+        var comps = findComponents(graph);
+        // Run FR per component
+        for (var c = 0; c < comps.length; c++) {
+          // Initialise component nodes in a small random area
+          for (var i = 0; i < comps[c].length; i++) {
+            graph.setNodeAttribute(comps[c][i], "x", (Math.random() - 0.5) * 10);
+            graph.setNodeAttribute(comps[c][i], "y", (Math.random() - 0.5) * 10);
+          }
+          frLayout(graph, comps[c], 200);
+        }
+        // Arrange components in a grid so they don't overlap
+        if (comps.length <= 1) return;
+        var cols = Math.ceil(Math.sqrt(comps.length));
+        var padding = 30;
+        var cx = 0, cy = 0;
+        for (var c = 0; c < comps.length; c++) {
+          // Compute bounding box
+          var minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+          for (var i = 0; i < comps[c].length; i++) {
+            var nx = graph.getNodeAttribute(comps[c][i], "x");
+            var ny = graph.getNodeAttribute(comps[c][i], "y");
+            if (nx < minX) minX = nx; if (nx > maxX) maxX = nx;
+            if (ny < minY) minY = ny; if (ny > maxY) maxY = ny;
+          }
+          var w = maxX - minX || 1, h = maxY - minY || 1;
+          // Center this component at its grid cell
+          var col = c % cols, row = Math.floor(c / cols);
+          var targetX = col * (padding + w);
+          var targetY = row * (padding + h);
+          var offsetX = targetX - (minX + maxX) / 2;
+          var offsetY = targetY - (minY + maxY) / 2;
+          for (var i = 0; i < comps[c].length; i++) {
+            graph.setNodeAttribute(comps[c][i], "x", graph.getNodeAttribute(comps[c][i], "x") + offsetX);
+            graph.setNodeAttribute(comps[c][i], "y", graph.getNodeAttribute(comps[c][i], "y") + offsetY);
+          }
+        }
+      }
+
+      /* ── Assign curvature for parallel edges ────────────────────── */
+      function assignParallelCurvatures(graph) {
+        var groups = {};
+        graph.forEachEdge(function(edge, attrs, src, tgt) {
+          var key = [src, tgt].sort().join("|||");
+          if (!groups[key]) groups[key] = [];
+          groups[key].push(edge);
+        });
+        for (var key in groups) {
+          var edges = groups[key];
+          if (edges.length === 1) {
+            // Single edge: use default line program (no type override)
+            continue;
+          }
+          // Parallel edges: use curved program with spread curvatures
+          for (var i = 0; i < edges.length; i++) {
+            var t = edges.length === 2
+              ? (i === 0 ? -0.3 : 0.3)
+              : ((i / (edges.length - 1)) * 2 - 1) * 0.35;
+            graph.setEdgeAttribute(edges[i], "type", "curved");
+            graph.setEdgeAttribute(edges[i], "curvature", t);
+          }
+        }
+      }
+
+      if (!GraphCtor) {
+        showError("Failed to load graphology. Local asset may be missing or invalid.");
+      } else if (!SigmaCtor) {
+        showError("Failed to load sigma. Local asset may be missing or invalid.");
+      } else {
+        try {
+          var graph = new GraphCtor({multi: true, type: "undirected"});
+
+          for (var i = 0; i < payload.nodes.length; i++) {
+            var n = payload.nodes[i];
+            graph.addNode(n.id, n);
+          }
+          for (var j = 0; j < payload.edges.length; j++) {
+            var e = payload.edges[j];
+            graph.addEdgeWithKey(e.id, e.source, e.target, e);
+          }
+
+          layoutGraph(graph);
+
+          assignParallelCurvatures(graph);
+
+          showWelcome();
+
+          if (payload.nodes.length === 0) {
+            showError("No nodes were loaded from the CSV data.");
+          }
+
+          /* ── State ─────────────────────────────────────────────── */
+          var hoveredNode = null;
+          var selectedNode = null;
+          var neighborSet = {};
+          var searchQuery = "";
+          var showEdgeLabels = false;
+
+          function updateNeighborSet(nodeId) {
+            neighborSet = {};
+            if (!nodeId) return;
+            neighborSet[nodeId] = true;
+            graph.forEachNeighbor(nodeId, function(nb) { neighborSet[nb] = true; });
+          }
+
+          var sigmaSettings = {
+            renderEdgeLabels: showEdgeLabels,
+            edgeLabelSize: 12,
+            minCameraRatio: 0.08,
+            maxCameraRatio: 6,
+            autoRescale: true,
+            autoCenter: true,
+            nodeReducer: function(node, data) {
+              var res = Object.assign({}, data);
+              var activeNode = hoveredNode || selectedNode;
+              // Search filtering
+              if (searchQuery && node.toLowerCase().indexOf(searchQuery) === -1) {
+                res.color = "#e8e8e8";
+                res.label = "";
+                res.size = Math.max(2, res.size * 0.5);
+              }
+              // Hover/selection dimming
+              if (activeNode && !neighborSet[node]) {
+                res.color = "#e0e0e0";
+                res.label = "";
+              }
+              if (node === selectedNode) {
+                res.highlighted = true;
+              }
+              return res;
+            },
+            edgeReducer: function(edge, data) {
+              var res = Object.assign({}, data);
+              var activeNode = hoveredNode || selectedNode;
+              if (activeNode) {
+                var src = graph.source(edge);
+                var tgt = graph.target(edge);
+                if (src !== activeNode && tgt !== activeNode) {
+                  res.color = "#e8e8e8";
+                }
+              }
+              return res;
+            },
+          };
+
+          // Default edge type is "line" (built-in EdgeLineProgram).
+          // Only register curve program for parallel edges that have type="curved".
+          if (CurveProgram) {
+            sigmaSettings.edgeProgramClasses = { curved: CurveProgram };
+          }
+
+          var renderer = new SigmaCtor(graph, document.getElementById("sigma-container"), sigmaSettings);
+          var draggedNode = null;
+
+          /* ── Formatted details panel (HTML) ────────────────────── */
+          function formatNodeDetailsHTML(nodeId) {
+            var a = graph.getNodeAttributes(nodeId);
+            var edgeIds = graph.edges(nodeId);
+            var incident = [];
+            for (var k = 0; k < edgeIds.length; k++) {
+              incident.push(graph.getEdgeAttributes(edgeIds[k]));
+            }
+            incident.sort(function(x, y) {
+              return String(x.edge_type).localeCompare(String(y.edge_type)) || Number(x.time_cost) - Number(y.time_cost);
+            });
+
+            var html = '<div class="detail-field"><span class="detail-label">ID:</span> ' + a.id + '</div>';
+            html += '<div class="detail-field"><span class="detail-label">Description:</span> ' + (a.description || '<em>none</em>') + '</div>';
+            html += '<div class="detail-field"><span class="detail-label">Connections:</span> ' + incident.length + '</div>';
+
+            if (incident.length > 0) {
+              html += '<table class="edge-table"><tr><th>Type</th><th>Cost</th><th>To</th></tr>';
+              for (var m = 0; m < incident.length; m++) {
+                var ed = incident[m];
+                var other = ed.source === nodeId ? ed.target : ed.source;
+                var bgColor = EDGE_COLORS[ed.edge_type] || "#8a98b0";
+                html += '<tr><td><span class="edge-badge" style="background:' + bgColor + ';">' + ed.edge_type + '</span></td>';
+                html += '<td>' + ed.time_cost + 's</td>';
+                html += '<td>' + other + '</td></tr>';
+              }
+              html += '</table>';
+            }
+            return html;
+          }
+
+          function clearSelection() {
+            selectedNode = null;
+            updateNeighborSet(hoveredNode);
+            renderer.refresh();
+            detailsTitle.textContent = "Campus Map";
+            showWelcome();
+          }
+
+          /* ── Hover ─────────────────────────────────────────────── */
+          renderer.on("enterNode", function(event) {
+            hoveredNode = event.node;
+            updateNeighborSet(hoveredNode);
+            renderer.refresh();
+          });
+          renderer.on("leaveNode", function() {
+            hoveredNode = null;
+            updateNeighborSet(selectedNode);
+            renderer.refresh();
+          });
+
+          /* ── Selection ─────────────────────────────────────────── */
+          renderer.on("clickNode", function(event) {
+            selectedNode = event.node;
+            updateNeighborSet(selectedNode);
+            renderer.refresh();
+            detailsTitle.textContent = "Node Details";
+            detailsBody.innerHTML = formatNodeDetailsHTML(event.node);
+          });
+
+          renderer.on("clickStage", function() {
+            clearSelection();
+          });
+
+          /* ── Drag-and-drop ─────────────────────────────────────── */
+          renderer.on("downNode", function(event) {
+            draggedNode = event.node;
+            if (typeof event.preventSigmaDefault === "function") {
+              event.preventSigmaDefault();
+            }
+          });
+          renderer.getMouseCaptor().on("mousemovebody", function(event) {
+            if (draggedNode === null) return;
+            var pos = renderer.viewportToGraph(event);
+            graph.setNodeAttribute(draggedNode, "x", pos.x);
+            graph.setNodeAttribute(draggedNode, "y", pos.y);
+            if (typeof event.preventSigmaDefault === "function") {
+              event.preventSigmaDefault();
+            }
+          });
+          renderer.getMouseCaptor().on("mouseup", function() {
+            draggedNode = null;
+          });
+
+          /* ── Zoom to fit ───────────────────────────────────────── */
+          function zoomToFit() {
+            renderer.getCamera().animatedReset({ duration: 300 });
+          }
+
+          document.getElementById("btn-fit").addEventListener("click", zoomToFit);
+
+          /* ── Toggle edge labels ────────────────────────────────── */
+          document.getElementById("btn-labels").addEventListener("click", function() {
+            showEdgeLabels = !showEdgeLabels;
+            renderer.setSetting("renderEdgeLabels", showEdgeLabels);
+          });
+
+          /* ── Export PNG ────────────────────────────────────────── */
+          document.getElementById("btn-export").addEventListener("click", function() {
+            var layers = renderer.getCanvases();
+            var canvas = document.createElement("canvas");
+            var first = layers.edges || layers.nodes || Object.values(layers)[0];
+            if (!first) return;
+            canvas.width = first.width;
+            canvas.height = first.height;
+            var ctx = canvas.getContext("2d");
+            ctx.fillStyle = "#f7fbff";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            var order = ["edges", "nodes", "labels", "hovers", "hoverNodes", "mouse"];
+            for (var li = 0; li < order.length; li++) {
+              if (layers[order[li]]) {
+                ctx.drawImage(layers[order[li]], 0, 0);
+              }
+            }
+            // Also draw any remaining layers not in the order list
+            for (var name in layers) {
+              if (order.indexOf(name) === -1) {
+                ctx.drawImage(layers[name], 0, 0);
+              }
+            }
+            var link = document.createElement("a");
+            link.download = "campus-map.png";
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+          });
+
+          /* ── Search ────────────────────────────────────────────── */
+          searchInput.addEventListener("input", function() {
+            searchQuery = searchInput.value.trim().toLowerCase();
+            renderer.refresh();
+          });
+
+          /* ── Keyboard shortcuts ────────────────────────────────── */
+          document.addEventListener("keydown", function(evt) {
+            // Ignore if typing in the search input
+            if (document.activeElement === searchInput) {
+              if (evt.key === "Escape") { searchInput.blur(); searchInput.value = ""; searchQuery = ""; renderer.refresh(); }
+              return;
+            }
+            if (evt.key === "f" || evt.key === "F") { zoomToFit(); }
+            if (evt.key === "l" || evt.key === "L") {
+              showEdgeLabels = !showEdgeLabels;
+              renderer.setSetting("renderEdgeLabels", showEdgeLabels);
+            }
+            if (evt.key === "Escape") { clearSelection(); }
+          });
+
+        } catch (error) {
+          showError("Failed to render graph: " + error);
+        }
+      }
+    </script>
+  </body>
+</html>

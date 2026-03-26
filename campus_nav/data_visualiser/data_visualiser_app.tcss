@@ -1,0 +1,33 @@
+#visualiser_root {
+    width: 100%;
+    height: 100%;
+    margin: 2 6;
+}
+
+#title-label {
+    background: $panel;
+    width: 100%;
+    padding: 1;
+    text-align: center;
+}
+
+#stats-row {
+    width: 100%;
+    height: auto;
+    padding: 0 2;
+}
+
+#stats-row Static {
+    width: 1fr;
+    text-align: center;
+}
+
+#status {
+    padding: 1 2;
+    height: auto;
+}
+
+#hint {
+    text-align: center;
+    color: $text-muted;
+}
