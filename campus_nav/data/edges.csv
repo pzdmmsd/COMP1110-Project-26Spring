@@ -1,6 +1,6 @@
 node_1_id,node_2_id,edge_type,time_cost
 Bookstore,MTR_C1_Exit,LIFT,153
-Bookstore,Red_Wall,FLAT,28
+Bookstore,RedWall,FLAT,28
 CYMAmenitiesCtr_2F_Entrance,CYMAmenitiesCtr_4F_Entrance,ESCALATOR,37
 CYMAmenitiesCtr_2F_Entrance,CYMAmenitiesCtr_4F_Entrance,STAIRS,50
 CYMAmenitiesCtr_2F_Entrance,CYMAmenitiesCtr_GF_Entrance,ESCALATOR,27
@@ -10,38 +10,38 @@ CYMAmenitiesCtr_4F_Entrance,CYMAmenitiesCtr_CYMCanteen,FLAT,25
 CYMAmenitiesCtr_4F_Entrance,MengWahComplex_GF,STAIRS,24
 CYMAmenitiesCtr_GF_Entrance,CYMAmenitiesCtr_GF_VendingHub,STAIRS,10
 CYMAmenitiesCtr_GF_Entrance,SunYatSen_LilyPond,FLAT,22
-Chi_Wah_1F_North,Chi_Wah_1F_South,FLAT,70
-Chi_Wah_1F_North,Red_Wall,ESCALATOR,48
-Chi_Wah_1F_South,Jockey_Club_Tower_Lift_GF,ESCALATOR,65
-Chi_Wah_1F_South,Jockey_Club_Tower_Lift_GF,LIFT,48
-Chi_Wah_1F_South,Jockey_Club_Tower_Lift_GF,STAIRS,43
-Chi_Wah_1F_South,Law_Library,FLAT,42
-Chi_Wah_Staircase,Chow_Yei_Ching_Building_GF,FLAT,43
-Chi_Wah_Staircase,Jockey_Club_Tower_Lift_GF,FLAT,26
-Chow_Yei_Ching_Building_GF,Chow_Yei_Ching_Building_LGF,LIFT,28
-Chow_Yei_Ching_Building_GF,Chow_Yei_Ching_Building_LGF,STAIRS,16
-Chow_Yei_Ching_Building_GF,Composite_Building_1F,FLAT,61
-Chow_Yei_Ching_Building_LGF,Composite_Building_GF,FLAT,36
-Chow_Yei_Ching_Building_LGF,Jockey_Club_Tower_Lift_LGF,FLAT,70
-Composite_Building_1F,Composite_Building_GF,LIFT,38
-Composite_Building_1F,Composite_Building_GF,STAIRS,30
-Composite_Building_GF,SU_Restaurant,FLAT,50
+ChiWah_1F_North,ChiWah_1F_South,FLAT,70
+ChiWah_1F_North,RedWall,ESCALATOR,48
+ChiWah_1F_South,JockeyClubTower_Lift_GF,ESCALATOR,65
+ChiWah_1F_South,JockeyClubTower_Lift_GF,LIFT,48
+ChiWah_1F_South,JockeyClubTower_Lift_GF,STAIRS,43
+ChiWah_1F_South,LawLibrary,FLAT,42
+ChiWah_Staircase,ChowYeiChingBuilding_GF,FLAT,43
+ChiWah_Staircase,JockeyClubTower_Lift_GF,FLAT,26
+ChowYeiChingBuilding_GF,ChowYeiChingBuilding_LGF,LIFT,28
+ChowYeiChingBuilding_GF,ChowYeiChingBuilding_LGF,STAIRS,16
+ChowYeiChingBuilding_GF,CompositeBuilding_1F,FLAT,61
+ChowYeiChingBuilding_LGF,CompositeBuilding_GF,FLAT,36
+ChowYeiChingBuilding_LGF,JockeyClubTower_Lift_LGF,FLAT,70
+CompositeBuilding_1F,CompositeBuilding_GF,LIFT,38
+CompositeBuilding_1F,CompositeBuilding_GF,STAIRS,30
+CompositeBuilding_GF,SURestaurant,FLAT,50
 FungPingShan_Building,Lift_Between_KKLeung_Knowles,ESCALATOR,91
 FungPingShan_Building,TTTsui_Building_LG_Entrance,FLAT,37
-Haking_Wong_Lift_Inside_4F,Haking_Wong_Lift_Outside_5F,STAIRS,30
-Haking_Wong_Lift_Inside_4F,SU_Restaurant,FLAT,5
-Haking_Wong_Lift_Outside_5F,UStr_Upper_MTR_Exit,FLAT,45
-Haking_Wong_Lift_Outside_5F,UStr_Upper_MTR_Exit,MINOR_STAIRS,29
+HakingWong_Lift_Inside_4F,HakingWong_Lift_Outside_5F,STAIRS,30
+HakingWong_Lift_Inside_4F,SURestaurant,FLAT,5
+HakingWong_Lift_Outside_5F,UStr_Upper_MTR_Exit,FLAT,45
+HakingWong_Lift_Outside_5F,UStr_Upper_MTR_Exit,MINOR_STAIRS,29
 InnoWingTwo,RunRunSBuilding_GF_Entrance,FLAT,22
 InnoWingTwo,StephenH_GeoMuseum_Entrance,FLAT,38
-Jockey_Club_Tower_Lift_GF,Jockey_Club_Tower_Lift_LGF,ESCALATOR,74
-Jockey_Club_Tower_Lift_GF,Jockey_Club_Tower_Lift_LGF,LIFT,10
-Jockey_Club_Tower_Lift_GF,Jockey_Club_Tower_Lift_LGF,STAIRS,73
-Jockey_Club_Tower_Lift_GF,Law_Library,LIFT,108
-Jockey_Club_Tower_Lift_GF,Red_Wall,FLAT,47
-Jockey_Club_Tower_Lift_GF,Run_Run_Shaw_Tower_Lift_GF,FLAT,45
-Jockey_Club_Tower_Lift_LGF,MTR_C1_Exit,ESCALATOR,213
-Jockey_Club_Tower_Lift_LGF,Run_Run_Shaw_Tower_Lift_LGF,FLAT,57
+JockeyClubTower_Lift_GF,JockeyClubTower_Lift_LGF,ESCALATOR,74
+JockeyClubTower_Lift_GF,JockeyClubTower_Lift_LGF,LIFT,10
+JockeyClubTower_Lift_GF,JockeyClubTower_Lift_LGF,STAIRS,73
+JockeyClubTower_Lift_GF,LawLibrary,LIFT,108
+JockeyClubTower_Lift_GF,RedWall,FLAT,47
+JockeyClubTower_Lift_GF,RunRunShawTower_Lift_GF,FLAT,45
+JockeyClubTower_Lift_LGF,MTR_C1_Exit,ESCALATOR,213
+JockeyClubTower_Lift_LGF,RunRunShawTower_Lift_LGF,FLAT,57
 KKLeung_Building_GF,KKLeung_Building_LG2F,LIFT,44
 KKLeung_Building_GF,Knowles_Building,FLAT,66
 KKLeung_Building_GF,Lift_Between_KKLeung_Knowles,FLAT,20
@@ -49,7 +49,7 @@ KKLeung_Building_LG2F,Swire_Building,FLAT,41
 Knowles_Building,Lift_Between_KKLeung_Knowles,FLAT,45
 Knowles_Building,SunYatSenPlace_HappyPark,FLAT,25
 Knowles_Building,SunYatSenPlace_HappyPark,MINOR_STAIRS,17
-Law_Library,Red_Wall,STAIRS,55
+LawLibrary,RedWall,STAIRS,55
 Library Extension,Main Building,FLAT,18
 Library Extension,MainLib_2F_Entrance,ESCALATOR,168
 Library Extension,MainLib_2F_Entrance,LIFT,172
@@ -62,8 +62,8 @@ Library Extension,SunYatSenSteps_KnowlesBuilding_1F,STAIRS,69
 LiftLobby_NearCoffeeAcademics,SunYatSenPlace_HappyPark,FLAT,58
 LiftLobby_NearCoffeeAcademics,UStr_Upper_LiftLobby_NearInnoWing,ESCALATOR,45
 LiftLobby_NearCoffeeAcademics,UStr_Upper_LiftLobby_NearInnoWing,LIFT,43
-MTR_C1_Exit,Red_Wall,LIFT,168
-MTR_C1_Exit,Run_Run_Shaw_Tower_Lift_LGF,ESCALATOR,170
+MTR_C1_Exit,RedWall,LIFT,168
+MTR_C1_Exit,RunRunShawTower_Lift_LGF,ESCALATOR,170
 Main Building,MainLib_2F_Entrance,ESCALATOR,189
 Main Building,MainLib_2F_Entrance,LIFT,199
 Main Building,MainLib_GF_Entrance,LIFT,48
@@ -90,11 +90,11 @@ MengWahComplex_1F,RunmeS_4F,FLAT,28
 RaysonHTheatre_GF,RunRunSBuilding_GF_Entrance,FLAT,36
 RaysonHTheatre_GF,RunmeS_GF_Entrance,FLAT,8
 RaysonHTheatre_GF,SunYatSen_LilyPond,STAIRS,30
-Red_Wall,Run_Run_Shaw_Tower_Lift_GF,FLAT,41
+RedWall,RunRunShawTower_Lift_GF,FLAT,41
 RunRunSBuilding_GF_Entrance,SunYatSenSteps_KnowlesBuilding_1F,STAIRS,53
 RunRunSBuilding_GF_Entrance,SunYatSenSteps_KnowlesBuilding_1F,STAIRS,55
 RunRunSBuilding_GF_Entrance,SunYatSen_LilyPond,FLAT,79
-Run_Run_Shaw_Tower_Lift_GF,Run_Run_Shaw_Tower_Lift_LGF,LIFT,17
+RunRunShawTower_Lift_GF,RunRunShawTower_Lift_LGF,LIFT,17
 RunmeS_4F,RunmeS_GF_Entrance,STAIRS,88
 StephenH_GeoMuseum_Entrance,UStr_Upper_InnoWing_Entrance,FLAT,7
 SunYatSenPlace_HappyPark,SunYatSenSteps_KnowlesBuilding_1F,FLAT,22
