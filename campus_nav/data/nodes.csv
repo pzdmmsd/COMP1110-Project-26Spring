@@ -13,8 +13,10 @@ ChowYeiChingBuilding_GF,
 ChowYeiChingBuilding_LGF,
 CompositeBuilding_1F,Upper University Street
 CompositeBuilding_GF,Lower University Street
+East_Gate_Exist,
 FungPingShan_Building,
-HakingWong_Lift_Inside_4F,
+HakingWong_Lift_Inside_4F,Near SU canteen.
+HakingWong_Lift_Outside_4F,"Able to take lift to MTR Exit A1, near HKU Engg UG Office."
 HakingWong_Lift_Outside_5F,
 InnoWingTwo,
 JockeyClubTower_Lift_GF,
@@ -49,7 +51,6 @@ TTTsui_Building_3F_Entrance,
 TTTsui_Building_LG_Entrance,
 TangChiNgong_Building,
 UStr_Lower_InnoWing_Terminal,Lower University Street - terminal near InnoWing
-UStr_Lower_NearHakingWong,
 UStr_Upper_InnoWing_Entrance,
 UStr_Upper_LiftLobby_NearInnoWing,Upper University Street - the lift lobby near InnoWing
 UStr_Upper_MTR_Exit,
