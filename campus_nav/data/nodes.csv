@@ -26,13 +26,13 @@ KKLeung_Building_GF,
 KKLeung_Building_LG2F,
 Knowles_Building,
 LawLibrary,
-Library Extension,"near the main building, on the floor of LE 1"
+Library_Extension,"near the main building, on the floor of LE 1"
 LiftLobby_NearCoffeeAcademics,"The lift close to Coffee Academïcs, on the same level as Happy Park."
 Lift_Between_KKLeung_Knowles,
 MTR_C1_Exit,
-Main Building,the same floor of LE 1
 MainLib_2F_Entrance,
 MainLib_GF_Entrance,
+Main_Building,the same floor of LE 1
 MengWahComplex_1F,
 MengWahComplex_GF,
 RaysonHTheatre_GF,
