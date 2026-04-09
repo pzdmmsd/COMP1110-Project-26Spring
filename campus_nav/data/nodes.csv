@@ -5,41 +5,44 @@ CYMAmenitiesCtr_4F_Entrance,
 CYMAmenitiesCtr_CYMCanteen,
 CYMAmenitiesCtr_GF_Entrance,
 CYMAmenitiesCtr_GF_VendingHub,
-CYM_Physics_Chemistry_3F,
-Chi_Wah_1F_North,RRSTower Side
-Chi_Wah_1F_South,JCT Side
-Chi_Wah_Staircase,Opposite Alfafa
-Chow_Yei_Ching_Building_GF,
-Chow_Yei_Ching_Building_LGF,
-Composite_Building_1F,Upper University Street
-Composite_Building_GF,Lower University Street
+CYM_Physics_Chemistry_G,
+CYM_Physics_Chemistry_LG,
+ChiWah_1F_North,RRSTower Side
+ChiWah_1F_South,JCT Side
+ChiWah_Staircase,Opposite Alfafa
+ChowYeiChingBuilding_GF,
+ChowYeiChingBuilding_LGF,
+CompositeBuilding_1F,Upper University Street
+CompositeBuilding_GF,Lower University Street
+East_Gate_Exist,
 FungPingShan_Building,
-Haking_Wong_Lift_Inside_4F,
-Haking_Wong_Lift_Outside_5F,
+HakingWong_Lift_Inside_4F,Near SU canteen.
+HakingWong_Lift_Outside_4F,"Able to take lift to MTR Exit A1, near HKU Engg UG Office."
+HakingWong_Lift_Outside_5F,
 InnoWingTwo,
-Jockey_Club_Tower_Lift_GF,
-Jockey_Club_Tower_Lift_LGF,
+JockeyClubTower_Lift_GF,
+JockeyClubTower_Lift_LGF,
 KKLeung_Building_GF,
 KKLeung_Building_LG2F,
 Knowles_Building,
-Law_Library,
-Library Extension,"near the main building, on the floor of LE 1"
+LawLibrary,
+Library_Extension,"near the main building, on the floor of LE 1"
 LiftLobby_NearCoffeeAcademics,"The lift close to Coffee Academïcs, on the same level as Happy Park."
 Lift_Between_KKLeung_Knowles,
 MTR_C1_Exit,
-Main Building,the same floor of LE 1
 MainLib_2F_Entrance,
 MainLib_GF_Entrance,
+Main_Building,the same floor of LE 1
 MengWahComplex_1F,
 MengWahComplex_GF,
 RaysonHTheatre_GF,
-Red_Wall,
+RedWall,
 RunRunSBuilding_GF_Entrance,
-Run_Run_Shaw_Tower_Lift_GF,
-Run_Run_Shaw_Tower_Lift_LGF,
+RunRunShawTower_Lift_GF,
+RunRunShawTower_Lift_LGF,
 RunmeS_4F,
 RunmeS_GF_Entrance,
-SU_Restaurant,
+SURestaurant,
 StephenH_GeoMuseum_Entrance,
 SunYatSenPlace_HappyPark,the flat ground
 SunYatSenSteps_KnowlesBuilding_1F,the door
@@ -49,7 +52,6 @@ TTTsui_Building_3F_Entrance,
 TTTsui_Building_LG_Entrance,
 TangChiNgong_Building,
 UStr_Lower_InnoWing_Terminal,Lower University Street - terminal near InnoWing
-UStr_Lower_NearHakingWong,
 UStr_Upper_InnoWing_Entrance,
 UStr_Upper_LiftLobby_NearInnoWing,Upper University Street - the lift lobby near InnoWing
 UStr_Upper_MTR_Exit,
